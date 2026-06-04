@@ -12,6 +12,7 @@ interface Event {
   allDay: boolean
   id: number
   categoryId: string
+  description?: string
 }
 
 interface Category {
@@ -41,6 +42,8 @@ export default function Home() {
   const [isEditing, setIsEditing] = useState(false)
   const [editTitle, setEditTitle] = useState('')
   const [view, setView] = useState<"calendar" | "agenda">("calendar")
+  const [newEventDescription, setNewEventDescription] = useState('')
+  const [titleError, setTitleError] = useState('')
 
   useEffect(() => {
     const stored = localStorage.getItem('hobby-events')
@@ -55,21 +58,27 @@ export default function Home() {
     setSelectedDate(arg.dateStr)
     setNewEventTitle('')
     setNewEventCategory(categories[0].id)
+    setNewEventDescription('')
     setShowAddModal(true)
   }
 
-  function handleAddEvent() {
-    if (newEventTitle.trim() === '') return
-    const event: Event = {
-      title: newEventTitle.trim(),
-      start: selectedDate,
-      allDay: true,
-      id: Date.now(),
-      categoryId: newEventCategory,
-    }
-    setAllEvents((prev) => [...prev, event])
-    setShowAddModal(false)
+ function handleAddEvent() {
+  if (newEventTitle.trim() === '') {
+    setTitleError('Titel is verplicht')
+    return
   }
+  setTitleError('')
+  const event: Event = {
+    title: newEventTitle.trim(),
+    start: selectedDate,
+    allDay: true,
+    id: Date.now(),
+    categoryId: newEventCategory,
+    description: newEventDescription.trim(),
+  }
+  setAllEvents((prev) => [...prev, event])
+  setShowAddModal(false)
+}
 
   function handleEventClick(data: { event: { id: string } }) {
     const found = allEvents.find((e) => e.id === Number(data.event.id))
@@ -106,32 +115,29 @@ export default function Home() {
 
   return (
     <>
-      <nav className="flex justify-between items-center mb-6 border-b border-violet-100 p-4">
-       <img src="/applogo.png" alt="HobbyOnTime" className="h-16" />
-        {/* View Toggle */}
-        <div className="flex gap-2 mb-4 bg-gray-100 p-1 rounded-xl w-fit">
+      <nav className="flex justify-between items-center mb-2 border-b border-gray-200 p-4">
+        <img src="/applogo.png" alt="HobbyOnTime" className="h-16" />
+        <div className="flex gap-2 bg-gray-100 p-1 rounded-xl w-fit">
           <button
             onClick={() => setView("calendar")}
             className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-              view === "calendar" ? "bg-white text-gray-800 shadow-sm" : "text-gray-500"
+              view === "calendar" ? "bg-[#1a2b5f] text-white shadow-sm" : "text-gray-500"
             }`}
           >
-            Kalender
+             Kalender
           </button>
           <button
             onClick={() => setView("agenda")}
             className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-              view === "agenda" ? "bg-white text-gray-800 shadow-sm" : "text-gray-500"
+              view === "agenda" ? "bg-[#1a2b5f] text-white shadow-sm" : "text-gray-500"
             }`}
           >
              Agenda
           </button>
         </div>
-
       </nav>
 
-      <main className="p-6 pt-0">
-       
+      <main className="p-6 pt-2">
         {/* Filter */}
         <div className="flex gap-2 mb-4 flex-wrap">
           <button
@@ -170,8 +176,8 @@ export default function Home() {
               const cat = categories.find((c) => c.id === ev.categoryId)
               return {
                 ...ev,
-                backgroundColor: cat?.color || "#6366f1",
-                borderColor: cat?.color || "#6366f1",
+                backgroundColor: cat?.color || "#1a2b5f",
+                borderColor: cat?.color || "#1a2b5f",
               }
             }) as EventSourceInput}
             nowIndicator={true}
@@ -247,11 +253,26 @@ export default function Home() {
             <input
               type="text"
               autoFocus
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-violet-500"
-              placeholder="Naam van het event"
+              className={`w-full border rounded-lg px-3 py-2 text-sm mb-1 focus:outline-none focus:ring-2 focus:ring-[#1a2b5f] ${
+                titleError ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="Naam van het event *"
               value={newEventTitle}
-              onChange={(e) => setNewEventTitle(e.target.value)}
+              onChange={(e) => {
+                setNewEventTitle(e.target.value)
+                setTitleError('')
+              }}
               onKeyDown={(e) => e.key === 'Enter' && handleAddEvent()}
+            />
+            {titleError && (
+              <p className="text-red-500 text-sm mb-3"> {titleError}</p>
+            )}
+            <textarea
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-4 mt-3 focus:outline-none focus:ring-2 focus:ring-[#1a2b5f]"
+              placeholder="Omschrijving (optioneel)"
+              value={newEventDescription}
+              onChange={(e) => setNewEventDescription(e.target.value)}
+              rows={3}
             />
             <div className="grid grid-cols-3 gap-2 mb-5">
               {categories.map((cat) => (
@@ -259,7 +280,7 @@ export default function Home() {
                   key={cat.id}
                   onClick={() => setNewEventCategory(cat.id)}
                   className={`p-2 rounded-lg border-2 text-sm font-medium transition-all ${
-                    newEventCategory === cat.id ? 'border-violet-500 bg-violet-50' : 'border-gray-200 hover:border-gray-300'
+                    newEventCategory === cat.id ? 'border-[#1a2b5f] bg-blue-50' : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
                   {cat.icon} {cat.name}
@@ -268,15 +289,17 @@ export default function Home() {
             </div>
             <div className="flex gap-3 justify-end">
               <button
-                onClick={() => setShowAddModal(false)}
+                onClick={() => {
+                  setShowAddModal(false)
+                  setTitleError('')
+                }}
                 className="px-4 py-2 text-sm rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50"
               >
                 Annuleren
               </button>
               <button
                 onClick={handleAddEvent}
-                disabled={newEventTitle.trim() === ''}
-                className="px-4 py-2 text-sm rounded-lg bg-violet-600 text-white hover:bg-violet-500 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm rounded-lg bg-[#1a2b5f] text-white hover:bg-[#f97316] transition-colors"
               >
                 Toevoegen
               </button>
@@ -284,7 +307,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
       {/* Detail Modal */}
       {showDetailModal && selectedEvent && (
         <div
@@ -305,7 +327,7 @@ export default function Home() {
                           autoFocus
                           value={editTitle}
                           onChange={(e) => setEditTitle(e.target.value)}
-                          className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+                          className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#1a2b5f]"
                         />
                       ) : (
                         <h3 className="text-lg font-semibold text-gray-800">{selectedEvent.title}</h3>
@@ -313,14 +335,17 @@ export default function Home() {
                       <p className="text-sm font-medium" style={{ color: cat?.color }}>{cat?.name}</p>
                     </div>
                   </div>
-                  <p className="text-gray-600 mb-6">📅 {selectedEvent.start}</p>
+                  <p className="text-gray-600 mb-2"> {selectedEvent.start}</p>
+                  {selectedEvent.description && (
+                    <p className="text-gray-600 mb-6"> {selectedEvent.description}</p>
+                  )}
                   <div className="flex gap-2">
                     {isEditing ? (
-                      <button onClick={handleEdit} className="flex-1 bg-violet-600 text-white py-2 rounded-xl font-medium hover:bg-violet-500">
+                      <button onClick={handleEdit} className="flex-1 bg-[#1a2b5f] text-white py-2 rounded-xl font-medium hover:bg-[#f97316]">
                         Opslaan
                       </button>
                     ) : (
-                      <button onClick={() => setIsEditing(true)} className="flex-1 bg-blue-500 text-white py-2 rounded-xl font-medium hover:bg-blue-600">
+                      <button onClick={() => setIsEditing(true)} className="flex-1 bg-[#1a2b5f] text-white py-2 rounded-xl font-medium hover:bg-[#f97316]">
                         Bewerken
                       </button>
                     )}
