@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+body {
+  background: #f9fafb;
+}
+.fc .fc-button {
+  background-color: #1a2b5f !important;
+  border-color: #1a2b5f !important;
+}
+
+.fc .fc-button:hover {
+  background-color: #f97316 !important;
+  border-color: #f97316 !important;
+}
+
+.fc .fc-button-active {
+  background-color: #f97316 !important;
+  border-color: #f97316 !important;
+}
+.fc .fc-today-button {
+  background-color: #f97316 !important;
+  border-color: #f97316 !important;
+}
+
+.fc .fc-today-button:hover {
+  background-color: #1a2b5f !important;
+  border-color: #1a2b5f !important;
+}
