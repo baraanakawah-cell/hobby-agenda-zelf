@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+#  HobbyOnTime — Eigen Versie
 
-## Getting Started
+Een persoonlijke hobby agenda gebouwd met mijn eigen kennis als leerproject.
 
-First, run the development server:
+##  Installatie
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Clone de repository:
+   git clone https://github.com/baraanakawah-cell/hobby-agenda-zelf.git
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Ga naar de map:
+   cd hobby-agenda-zelf
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Installeer de dependencies:
+   npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Start de applicatie:
+   npm run dev
 
-## Learn More
+5. Open je browser op http://localhost:3000
 
-To learn more about Next.js, take a look at the following resources:
+##  Functionaliteiten
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Kalenderweergave** — maandkalender met activiteiten op datum
+- **Agendaweergave** — chronologische lijst van activiteiten per dag
+- **Activiteit toevoegen** — formulier met validatie en omschrijving
+- **Detailweergave** — modal met bewerken en verwijderen
+- **Filteren** — filter activiteiten per hobby categorie
+- **localStorage** — data blijft bewaard na herladen
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+##  Hobby Categorieën
 
-## Deploy on Vercel
+-  Sporten
+-  Handwerk
+-  Lezen
+-  Koken
+-  Reizen
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+##  Technische keuzes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Next.js + TypeScript** — moderne React framework
+- **Tailwind CSS** — snelle styling
+- **FullCalendar** — kalender component
+- **localStorage** — data opslag in de browser
+
+## ℹ️ Over dit project
+
+Dit is mijn eigen versie van de HobbyOnTime app, gebouwd zonder AI hulp om mijn begrip van React en TypeScript te demonstreren.
